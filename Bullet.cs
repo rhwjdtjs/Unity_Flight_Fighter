@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviourPun
     Transform parent;
     TrailRenderer trailrenderer;
     public int actornumber;
-    [SerializeField] private float speed;
+    [SerializeField] private float speed; //총알 속도
     [SerializeField] private float survivaltime;
     [SerializeField] private GameObject guneffect;
     [SerializeField] private Rigidbody therigid;
