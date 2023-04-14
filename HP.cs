@@ -23,14 +23,14 @@ public class HP : MonoBehaviourPun
         myhpremain = GameObject.Find("myhp").GetComponent<Text>();
         hp = 100;
         targethp = 100;
-        myhpremain.text = hp.ToString();    //
-        Rockinghpremain.text = hpremain.text = targethp.ToString();
+        myhpremain.text = hp.ToString();    //남아 있는 체력 표기
+        Rockinghpremain.text = hpremain.text = targethp.ToString(); //락중일때 상대 정보에 체력 표시
     }
     IEnumerator timer()
     {
         yield return new WaitForSeconds(2f);
         PhotonNetwork.Destroy(this.gameObject);
-        PhotonNetwork.LoadLevel("ResultScene");
+        PhotonNetwork.LoadLevel("ResultScene"); //체력이 0이되고 바로 끝나지 않고 2초대기후 종료
     }
     public void Damage(int _damage)
     {
@@ -49,7 +49,7 @@ public class HP : MonoBehaviourPun
             
         }
     }
-    [PunRPC]
+    [PunRPC] //서버로 적용
     public void HPD(int _damage)
     {
         targethp -= _damage;
