@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
-public class launcher : MonoBehaviourPunCallbacks
+public class launcher : MonoBehaviourPunCallbacks //메인화면 포톤 연결 스크립트
 {
     public Dropdown m_dropdown_RoomMaxPlayers; 
     public Dropdown m_dropdown_MaxTime; 
@@ -16,23 +16,23 @@ public class launcher : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.AutomaticallySyncScene = true;
 
-        m_panel_Loading.SetActive(false);
+        m_panel_Loading.SetActive(false); //ui 관련
     }
 
     void Start()
     {
-        m_text_CurrentPlayerCount.gameObject.SetActive(false);
+        m_text_CurrentPlayerCount.gameObject.SetActive(false); //ui
         serverstate.text = "서버 연결 시도";
         Debug.Log("서버 연결 시도.");
-        PhotonNetwork.ConnectUsingSettings();
+        PhotonNetwork.ConnectUsingSettings(); //서버연결 시도
     }
 
     public void JoinRandomOrCreateRoom()
     {
      
         m_text_CurrentPlayerCount.gameObject.SetActive(true);
-        byte maxPlayers = byte.Parse(m_dropdown_RoomMaxPlayers.options[m_dropdown_RoomMaxPlayers.value].text); 
-        int maxTime = int.Parse(m_dropdown_MaxTime.options[m_dropdown_MaxTime.value].text);
+        byte maxPlayers = byte.Parse(m_dropdown_RoomMaxPlayers.options[m_dropdown_RoomMaxPlayers.value].text);  //방 인원설정
+        int maxTime = int.Parse(m_dropdown_MaxTime.options[m_dropdown_MaxTime.value].text); //방 제한시간 설정
 
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = maxPlayers; // 인원 지정.
@@ -40,7 +40,7 @@ public class launcher : MonoBehaviourPunCallbacks
         roomOptions.CustomRoomPropertiesForLobby = new string[] { "maxTime" }; 
         PhotonNetwork.JoinRandomOrCreateRoom(
             expectedCustomRoomProperties: new ExitGames.Client.Photon.Hashtable() { { "maxTime", maxTime } }, expectedMaxPlayers: maxPlayers, 
-            roomOptions: roomOptions 
+            roomOptions: roomOptions  //시간, 인원으로 방 생성
         );
     }
 
@@ -55,7 +55,7 @@ public class launcher : MonoBehaviourPunCallbacks
 
     private void UpdatePlayerCounts()
     {
-        m_text_CurrentPlayerCount.text = $"{PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers}";
+        m_text_CurrentPlayerCount.text = $"{PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers}"; //플레이어 찾기 텍스트에 표시 1/2 이런식으로
     }
 
    
@@ -88,15 +88,15 @@ public class launcher : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+            if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers) //인원수가 맞춰졌을경우
             {
-                PhotonNetwork.LoadLevel("CutScene");
+                PhotonNetwork.LoadLevel("CutScene"); //컷신으로 게임 시작
             }
         }
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        UpdatePlayerCounts();
+        UpdatePlayerCounts(); //플레이어가 나가면 다시 숫자 변경
     }
 }
