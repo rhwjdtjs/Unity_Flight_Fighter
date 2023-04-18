@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviourPun
     private Canvas canvas;
     private void camerachange()
     {
-        if(Input.GetKey(KeyCode.Z))
+        if(Input.GetKey(KeyCode.Z)) //키에 따른 카메라 전환
         {
             zcamera.gameObject.SetActive(true);
             maincamera.gameObject.SetActive(false);
@@ -75,8 +75,8 @@ public class PlayerController : MonoBehaviourPun
     }
     void Start()
     {
-        speedReciprocal = 1 / maxSpeed;
-        mn = (PhotonNetwork.IsMasterClient) ? my_number.master : my_number.client;
+        speedReciprocal = 1 / maxSpeed; //속도 초기화
+        mn = (PhotonNetwork.IsMasterClient) ? my_number.master : my_number.client; //플레이어 구분
         thegameui = FindObjectOfType<GAMESCENEUI>();
         Debug.Log("load complete");
     }
@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviourPun
     void Update()
     {
         
-            if (pv.IsMine)
+            if (pv.IsMine) //클라이언트가 나라면
             {
             ALTimage.text = "ALT " + transform.position.y.ToString("F0");
             camerachange();
@@ -119,11 +119,11 @@ public class PlayerController : MonoBehaviourPun
     }
     private void ImageBool()
     {
-        if (isaccel)
+        if (isaccel) //W 가 누른상태 즉 가속상태라면
         {
-            if (speed >= 1500 && speed <= 3450)
+            if (speed >= 1500 && speed <= 3450) //속도가 일정수준 이상 및 이하라면
             {
-                movesound.clip = upspeed;
+                movesound.clip = upspeed; //가속사운드 재생
             }
             else if(speed>=3451)
             {
@@ -135,7 +135,7 @@ public class PlayerController : MonoBehaviourPun
             isbreak = false;
             isdefault = false;
         }
-        else if (isbreak)
+        else if (isbreak) //S 를 누른 브레이크 상태라면
         {
             movesound.clip = breaksound;
             breakimage.gameObject.SetActive(true);
@@ -144,7 +144,7 @@ public class PlayerController : MonoBehaviourPun
             isaccel = false;
             isdefault = false;
         }
-        else if (isdefault)
+        else if (isdefault) //W S 아무것도 안누른 기본상태라면
         {
             movesound.clip = defaultsound;
             defaultimage.gameObject.SetActive(true);
@@ -153,7 +153,7 @@ public class PlayerController : MonoBehaviourPun
             isaccel = false;
             isbreak = false;
         }
-        else
+        else //그외에
         {
             isaccel = false;
             isbreak = false;
@@ -165,7 +165,7 @@ public class PlayerController : MonoBehaviourPun
     {
         speedtext.text = (speed / 10).ToString("F1") + "Km/h";
     }
-    private void Moving()
+    private void Moving() //움직임 코드
     {
         MoveAirCraft();
         mX = Input.GetAxis("Mouse Y");
@@ -176,33 +176,33 @@ public class PlayerController : MonoBehaviourPun
 
     private void MoveAirCraft()
     {
-        Vector3 lerpV3 = new Vector3(mX * pitchAmount, mY * yawAmount, mZ * -rollAmount);
-        rotateValue = Vector3.Lerp(rotateValue, lerpV3, lerpAmount * Time.deltaTime);
-        therigid.MoveRotation(therigid.rotation * Quaternion.Euler(rotateValue * Time.deltaTime));
+        Vector3 lerpV3 = new Vector3(mX * pitchAmount, mY * yawAmount, mZ * -rollAmount); //lerpV3 에 X, Y ,Z 값 저장
+        rotateValue = Vector3.Lerp(rotateValue, lerpV3, lerpAmount * Time.deltaTime); //천천히 회전시킴
+        therigid.MoveRotation(therigid.rotation * Quaternion.Euler(rotateValue * Time.deltaTime)); //리지드 바디로 움직이게함
 
        
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W)) //가속상태일때
         {
             float accelerEase = (maxSpeed - speed) * speedReciprocal;
-            speed += 1 * acceler * accelerEase * Time.deltaTime;
+            speed += 1 * acceler * accelerEase * Time.deltaTime; //속도를 점차 가속시킴
             therigid.velocity = transform.forward * speed * Time.deltaTime;
             isaccel = true;
             playereffect();
         }
         if (Input.GetKeyUp(KeyCode.W))
             isaccel = false;
-        if(Input.GetKey(KeyCode.S))
+        if(Input.GetKey(KeyCode.S)) //감속 상태일때
         {
             float breakEase = (speed - minSpeed) * speedReciprocal;
-            speed -= 1 * breakAmount * breakEase * Time.deltaTime; 
+            speed -= 1 * breakAmount * breakEase * Time.deltaTime;  //속도를 점차 감속시킴
             therigid.velocity = transform.forward * speed * Time.deltaTime;
             isbreak = true;
         }
         if (Input.GetKeyUp(KeyCode.S))
             isbreak = false;
-        if (accelervalue==0 && BreakValue==0)
+        if (accelervalue==0 && BreakValue==0) //감속, 가속 둘다아닐때
         {
-            speed += (defaultspeed - speed) * speedReciprocal * calibreateAmount * Time.deltaTime;
+            speed += (defaultspeed - speed) * speedReciprocal * calibreateAmount * Time.deltaTime; //평균속도로 만듬
             therigid.velocity = transform.forward * speed * Time.deltaTime;
             isdefault = true;
         }
