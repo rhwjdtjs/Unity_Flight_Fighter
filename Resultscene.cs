@@ -8,12 +8,12 @@ public class Resultscene : MonoBehaviourPunCallbacks
     void Start()
     {
         Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState = CursorLockMode.None; //커서를 보이게함
     }
     public void tolobby()
     {
-        PhotonNetwork.Disconnect();
-        PhotonNetwork.LoadLevel("Lobby");
+        PhotonNetwork.Disconnect(); //서버 닫기
+        PhotonNetwork.LoadLevel("Lobby");//로비로 불러옴
     }
     
     // Update is called once per frame
