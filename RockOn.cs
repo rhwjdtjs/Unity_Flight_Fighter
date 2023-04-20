@@ -61,14 +61,14 @@ public class RockOn : MonoBehaviourPun
     
    private IEnumerator rockingsound()
     {
-        if (CheckSight())
+        if (CheckSight()) //만약 락온상태라면
         {
-            if (!theweapon.isFire)
+            if (!theweapon.isFire) //무기가 미사일이라면
             {
                 rockonsound.GetComponent<AudioSource>().enabled = true;
                 if (!rockonsound.isPlaying)
                 {
-                    rockonsound.Play();
+                    rockonsound.Play(); //락온 상태중 삐~~~사운드 출력함
                 }
                 yield return new WaitForSeconds(1f);
             }
@@ -77,12 +77,12 @@ public class RockOn : MonoBehaviourPun
     private void enemyrocksound()
     {
         
-            if (theenemy.CheckSight())
+            if (theenemy.CheckSight())//만약 적이 나를 락온중이라면
             {
             waringimage.gameObject.SetActive(true);
                 rockingme.clip = rockingmeclip;
                 if (!rockingme.isPlaying)
-                    rockingme.PlayOneShot(rockingmeclip);
+                    rockingme.PlayOneShot(rockingmeclip);//위험 사운드 출력
             }
 
         
@@ -90,34 +90,36 @@ public class RockOn : MonoBehaviourPun
     }
     private void RockonState()
     {
-        if(CheckSight())
+        if(CheckSight()) //만약 락온상태라면
         {
-            if (!theweapon.isFire)
+            if (!theweapon.isFire) //마시알이라면
             {
                 Origintargetimage.gameObject.SetActive(false);
                 rockoncrosshair.gameObject.SetActive(true);
                 rockonimage.gameObject.SetActive(true);
+                //ui 수정 코드
             }
         }
-        else if(!CheckSight())
+        else if(!CheckSight()) //락온상태가 아니라면
         {
             waringimage.gameObject.SetActive(false);
             rockonsound.Stop();
             Origintargetimage.gameObject.SetActive(true);
             rockoncrosshair.gameObject.SetActive(false);
             rockonimage.gameObject.SetActive(false);
+            //ui 수정 코드
         }
     }
     public bool CheckSight()
     {
-        Collider[] _target = Physics.OverlapSphere(transform.position, viewDistance, targetMask);
+        Collider[] _target = Physics.OverlapSphere(transform.position, viewDistance, targetMask); //플레이어 기준으로 원을 그려 주위에 콜라이더를 확인해 저장함
 
         for (int i = 0; i < _target.Length; i++)
         {
-            Transform _targetTf = _target[i].transform;
-            Vector3 _direction = (_targetTf.position - transform.position).normalized;
-            float _angle = Vector3.Angle(_direction, transform.forward);
-            if (viewAngle*0.2f<_angle && _angle<viewAngle )
+            Transform _targetTf = _target[i].transform; //타겟의 위치를 저장
+            Vector3 _direction = (_targetTf.position - transform.position).normalized; //타겟의 위치와 나의 위치 사이의 벡터값을 구함
+            float _angle = Vector3.Angle(_direction, transform.forward); //구한 벡터값과 전방 벡터사이의 각도를 구함
+            if (viewAngle*0.2f<_angle && _angle<viewAngle ) //그 각도가 일정 각도 이상 일정 각도 이하라면 대략 400m~600미터 이하
             {
                 RaycastHit __hit;
                 if (Physics.Raycast(transform.position + transform.forward, _direction, out __hit, viewDistance))
@@ -125,16 +127,16 @@ public class RockOn : MonoBehaviourPun
                     if (__hit.transform.tag == "Player")
                     {
                         Debug.Log("!");
-                        if (!theweapon.isFire)
+                        if (!theweapon.isFire) //미사일 무기 모드라면
                         {
                             if (!beforerocksound.isPlaying)
-                                beforerocksound.PlayOneShot(beforerockeffect);
+                                beforerocksound.PlayOneShot(beforerockeffect); //락온 되기전 삐삐삐 사운드 출력
                         }
-                        return false;
+                        return false; //락온 상태가 아니어야하니 false 반환
                     }
                 }
             }
-            else if (_angle < viewAngle * 0.5f)
+            else if (_angle < viewAngle * 0.5f) //각도가 0.5f 정도이면
             {
                 RaycastHit _hit;
 
@@ -144,7 +146,7 @@ public class RockOn : MonoBehaviourPun
                     if (_hit.transform.tag == "Player")
                     {
                         Debug.DrawRay(transform.position + transform.forward, _direction, Color.blue);
-                        return true;
+                        return true; //값을 true로 반환시켜 락온이 된 상태를 나타냄
                     }
                 }
             }
