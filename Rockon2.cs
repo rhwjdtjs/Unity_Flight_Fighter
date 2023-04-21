@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
-public class Rockon2 : MonoBehaviourPun
+public class Rockon2 : MonoBehaviourPun //Rockon 과 동일한 스크립트 각각의 플레이어에게 붙음
 {
     [SerializeField] private float viewAngle;  // 시야 각도
     [SerializeField] private float viewDistance; // 시야 거리 
