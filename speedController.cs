@@ -9,7 +9,7 @@ public class speedController : MonoBehaviour
     {
         get
         {
-            return speed;
+            return speed; //속도를 반환함
         }
     }
 }
