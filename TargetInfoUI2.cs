@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
-public class TargetInfoUI2 : MonoBehaviourPun
+public class TargetInfoUI2 : MonoBehaviourPun //targetinfoui와 같은 스크립트로 player1, player2 에게 각각 스크립트가 붙음
 {
     [SerializeField] public Text TargetPosText2;
     [SerializeField] public Text cantseeTargetposTEXT2;
