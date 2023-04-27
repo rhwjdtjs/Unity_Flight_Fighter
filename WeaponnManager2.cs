@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 [RequireComponent(typeof(speedController))]
-public class WeaponnManager2 : MonoBehaviourPun
+public class WeaponnManager2 : MonoBehaviourPun //player2 에 붙은 스크립트 WeaponManager와 동일
 {
 
     [SerializeField] public bool useWeapon = false;
