@@ -64,9 +64,9 @@ public class WeaponManager : MonoBehaviourPun
     private void cntTEXT()
     {
         Debug.Log("123");
-        if (isFire)
+        if (isFire) //1번 키 즉 일반총일때
             guntext.text = bulletCnt.ToString();
-        else
+        else //미사일 일때
             missiletext.text = missileCnt.ToString();
     }
     // Update is called once per frame
@@ -89,7 +89,7 @@ public class WeaponManager : MonoBehaviourPun
     private void LateUpdate()
     {
        
-        target = themul.theplayer1.transform;
+        target = themul.theplayer1.transform; //타겟의 위치를 매번 측정
     }
     public void Fire()
     {
@@ -97,13 +97,13 @@ public class WeaponManager : MonoBehaviourPun
         if (Input.GetButtonDown("Fire1"))
         {
             Debug.Log("fire");
-            if (!isFire)
+            if (!isFire) //현재 무기가 미사일이라면
             {
-                CancelInvoke("FireMachineGun");
-                if (rockingsystem.CheckSight())
+                CancelInvoke("FireMachineGun"); //함수 취소
+                if (rockingsystem.CheckSight()) //락상태라면
                 {
                     Debug.Log("fire2");
-                    pv.RPC("FireMissile", RpcTarget.All);
+                    pv.RPC("FireMissile", RpcTarget.All); //미사일 발사
                 }
               
             }
@@ -113,7 +113,7 @@ public class WeaponManager : MonoBehaviourPun
             if (isFire)
             {
                 Debug.Log("fire1111");
-                pv.RPC("FireMachineGun", RpcTarget.All);
+                pv.RPC("FireMachineGun", RpcTarget.All); //머신건 발사
             }
         }
         Debug.Log("FRIEFUNCTION");
@@ -122,22 +122,22 @@ public class WeaponManager : MonoBehaviourPun
     void FireMachineGun()
     {
         Debug.Log("12345");
-        if (bulletCnt<=0)
+        if (bulletCnt<=0) //총알이 없다면
         {
-            CancelInvoke("FireMachineGun");
+            CancelInvoke("FireMachineGun"); //함수 취소
             return;
         }
-        if (guncooldown > 0)
+        if (guncooldown > 0) //쿨타임이라면 취소
             return;
-        guncooldown = bulletcool;
+        guncooldown = bulletcool; //쿨타임
         theaudiomacine.Play();
         FireTransforms = firetransform.position;
-        GameObject bullet =PhotonNetwork.Instantiate("Bullet1", FireTransforms, transform.rotation,0) as GameObject;
+        GameObject bullet =PhotonNetwork.Instantiate("Bullet1", FireTransforms, transform.rotation,0) as GameObject; //총알을 네트워크로 생성
         Bullet bulletscript = bullet.GetComponent<Bullet>();
-        bulletscript.Fire(thespeed.speed*10, gameObject.layer);
+        bulletscript.Fire(thespeed.speed*10, gameObject.layer); //불렛 속도
         bulletCnt--;
     }
-    public void machineguncooldown(ref float cooldown)
+    public void machineguncooldown(ref float cooldown) //머신건 쿨타임
     {
         Debug.Log("123456");
         if (cooldown > 0)
@@ -152,7 +152,7 @@ public class WeaponManager : MonoBehaviourPun
     public void GunFire()
     {
        
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1)) //머신건 장착
         {
             gunimage.gameObject.SetActive(true);
             missileimage.gameObject.SetActive(false);
@@ -163,7 +163,7 @@ public class WeaponManager : MonoBehaviourPun
             missileUI.gameObject.SetActive(false);
             return;
         }
-        if(Input.GetKeyDown(KeyCode.Alpha2))
+        if(Input.GetKeyDown(KeyCode.Alpha2)) //미사일 장착
         {
             gunimage.gameObject.SetActive(false);
             missileimage.gameObject.SetActive(true);
@@ -176,23 +176,23 @@ public class WeaponManager : MonoBehaviourPun
         }
         Debug.Log("GUNFUNCTION");
     }
-    public void switchweapon()
+    public void switchweapon() //무기 교환
     {
         Debug.Log("12345678");
         if (Input.GetKeyDown(KeyCode.Alpha1))
             useWeapon = !useWeapon;
     }
     [PunRPC]
-    void FireMissile()
+    void FireMissile() //미사일 발사
     {
         Debug.Log("123456789");
-        if (missileCnt <= 0)
+        if (missileCnt <= 0) //미사일이 없으면 반환
             return;
-        if (leftcool > 0 && rightcool > 0)
+        if (leftcool > 0 && rightcool > 0) //쿨타임이 0초가아니면 반환
             return;
 
         Vector3 missileposition;
-        if(missileCnt %2==1)
+        if(missileCnt %2==1) //미사일을 쏘면 양날개 좌우에서 한발씩 나감
         {
             missileposition = rightmissiletransform.position;
             rightcool = missilecool;
@@ -208,7 +208,7 @@ public class WeaponManager : MonoBehaviourPun
         theaudiomissile.Play();
         missileCnt--;
     }
-    public void missilecooldown(ref float cooldown)
+    public void missilecooldown(ref float cooldown) //미사일 쿨타임 계산
     {
         Debug.Log("2");
         if (cooldown > 0)
