@@ -27,9 +27,9 @@
 - 플레이어는 룸 입장 후 컷씬 씬으로 동기화되어 게임을 시작하며, 전투 중에는 기관총/미사일을 사용해 상대 HP를 0으로 만들면 결과 씬으로 이동합니다.
 
 **Highlights**
-- **Room Based Matchmaking: 인원/제한시간(maxTime) 조건 기반으로 랜덤 매칭 또는 룸 생
-- **Scene Sync: 마스터 클라이언트가 인원 충족 시 컷씬 로드, 모든 클라이언트 씬 동기
-- **Combat Sync: RPC/Network Instantiate 기반의 발사(기관총/미사일) 및 피격/HP 동기화
+- **Room Based Matchmaking: 인원/제한시간(maxTime) 조건 기반으로 랜덤 매칭 또는 룸 생성**
+- **Scene Sync: 마스터 클라이언트가 인원 충족 시 컷씬 로드, 모든 클라이언트 씬 동기**
+- **Combat Sync: RPC/Network Instantiate 기반의 발사(기관총/미사일) 및 피격/HP 동기화**
 
 ---
 
