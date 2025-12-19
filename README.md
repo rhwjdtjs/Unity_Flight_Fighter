@@ -1,16 +1,17 @@
-# Flight Fighter (Unity Acade 1 vs 1 MultiplayGame)
+# Flight Fighter (Unity Arcade 1 vs 1 MultiplayGame)
 > 유니티 기반 1 대 1 아케이드 멀티플레이 게임 (포톤 네트워크 기반)
 
 **Abouts**
-- 🏆 2022년도 2학기 AI 게임프로그래밍 강의 기말고사 작품  
+- 🏆 2022년도 2학기 AI 게임프로그래밍 강의 기말고사 작품 (1인 개발)  
 
 **Quick Links**
-- 🎮 플레이 시연 영상(포톤 네트워크): https://youtu.be/Ya8GWlwHJAQ?si=jv_7c-uHWJrbD0rv  
+- 🎮 플레이 시연 영상(Photon PUN): https://youtu.be/Ya8GWlwHJAQ?si=jv_7c-uHWJrbD0rv  
 - 📘 Technical Doc(아래 접기 섹션): README 하단
 
 ---
 ## Introduction
-개요 설명 (예정)
+Flight Fighter는 전투기를 조종해 1:1로 교전하는 아케이드 공중전 멀티플레이 게임입니다.
+Photon PUN의 Room 기반 멀티플레이를 사용해, 플레이어는 룸(매치)에 입장하면 전투 씬으로 동기화되어 게임을 시작합니다.  
 
 **Development**
 - **기간**: 2022.11 ~ 2022.12
