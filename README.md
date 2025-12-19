@@ -78,9 +78,140 @@
   <summary><b>📘 Technical Documentation (Flight Fighter 기술서) (펼치기)</b></summary>
 
 ## TOC
+  
+- [네트워크 구조 개요 (Photon Room 기반)](#1-네트워크-구조-개요-photon-room-기반)
+- [매칭/룸/씬 동기화 플로우](#2-매칭룸씬-동기화-플로우)
+- [플레이어 스폰/Ownership 설계](#3-플레이어-스폰ownership-설계)
+- [전투 동기화 (기관총/미사일) & 피격 판정](#4-전투-동기화-기관총미사일--피격-판정)
+- [락온 판정 로직 (시야각/거리/가시성)](#5-락온-판정-로직-시야각거리-가시성)
+- [UI/HUD 동기화 (타겟 거리/HP/카메라)](#6-uihud-동기화-타겟-거리hp카메라)
+- [조작키 정리](#7-조작키-정리)
 
-- 예정
-- 
+---
+
+## 1. 네트워크 구조 개요 (Photon Room 기반)
+본 프로젝트는 **Dedicated Server 권한형**이 아니라, Photon의 **Room 기반 멀티플레이**에서 제공하는 기능을 이용해 다음을 구현했습니다.
+
+- **Photon Cloud**: 접속/매칭/룸 관리 (ConnectUsingSettings, JoinRandomOrCreateRoom)  
+  - 관련 코드: `launcher.cs`
+
+- **Gameplay Sync**: 클라이언트 간 **RPC + Network Instantiate + Ownership** 동기화  
+  - 관련 코드: `WeaponManager.cs`, `MultyManager.cs`
+
+---
+
+## 2. 매칭/룸/씬 동기화 플로우
+
+### 2.1 서버 접속 및 매칭
+- 게임 시작 시 Photon 서버 접속 시도  
+  - 관련 코드: `launcher.cs`
+
+- UI에서 최대 인원/제한시간(maxTime) 선택 → 해당 조건으로 랜덤 매칭 또는 룸 생성  
+  - 관련 코드: `launcher.cs`
+
+### 2.2 씬 동기화
+- `PhotonNetwork.AutomaticallySyncScene = true`  
+  → 마스터가 `LoadLevel` 하면 전원이 같이 씬 이동  
+  - 관련 코드: `launcher.cs`
+
+- 룸 인원(=MaxPlayers) 충족 시 마스터가 `CutScene` 로드로 게임 시작  
+  - 관련 코드: `launcher.cs`
+
+---
+
+## 3. 플레이어 스폰/Ownership 설계
+
+### 3.1 스폰 전략
+- `MultyManager`에서 `Player1/Player2`를 네트워크 `Instantiate` 후,  
+  RPC로 ViewID를 전달하여 한쪽 오브젝트 소유권을 상대에게 `TransferOwnership`  
+  - 관련 코드: `MultyManager.cs`
+
+- 핵심 의도: 1 vs 1에서 각 클라이언트가 “자기 기체”를 소유하고,  
+  입력/카메라/발사 등을 **자기 소유 오브젝트 기준**으로 처리하도록 구성
+
+---
+
+## 4. 전투 동기화 (기관총/미사일) & 피격 판정
+
+### 4.1 기관총 (Bullet)
+- `Fire1`을 누르고 있는 동안, RPC로 `FireMachineGun` 실행 → Bullet 네트워크 `Instantiate`  
+  - 관련 코드: `WeaponManager.cs`
+
+- Bullet 충돌 시 상대 Player 여부 체크 후 HP를 4 감소  
+  - 관련 코드: `Bullet.cs`
+
+### 4.2 미사일 (Missile)
+- 현재 무기가 미사일이며, **락온 성공 시에만** RPC로 발사  
+  - 관련 코드: `WeaponManager.cs`
+
+- Missile 충돌 시 HP 30 감소 + 폭발 이펙트 네트워크 생성  
+  - 관련 코드: `Missile.cs`
+
+### 4.3 HP 동기화
+- 피격한 로컬 플레이어는 hp 감소, RPC로 상대(targethp)도 감소시켜 UI에 반영  
+  - 관련 코드: `HP.cs`
+
+- HP 0이면 2초 후 ResultScene 이동  
+  - 관련 코드: `HP.cs`
+
+---
+
+## 5. 락온 판정 로직 (시야각/거리/가시성)
+`RockOn.CheckSight()`는 다음 흐름으로 락온을 판정합니다.
+
+- `OverlapSphere`로 일정 거리 내 타겟 후보 탐색  
+  - 관련 코드: `RockOn.cs` / `Rockon2.cs`
+
+- 타겟 방향 벡터와 전방 벡터 각도 비교(viewAngle)  
+  - 관련 코드: `RockOn.cs` / `Rockon2.cs`
+
+- `Raycast`로 시야를 가리는 오브젝트가 없는지 확인  
+  - 관련 코드: `RockOn.cs` / `Rockon2.cs`
+
+- 이 구조 덕분에 미사일은 “그냥 누르면 나가는 무기”가 아니라,  
+  **정면 시야에 들어온 적에게만 발사되는 락온 무기**로 역할이 분리됩니다.  
+  - 관련 코드: `WeaponManager.cs`
+
+---
+
+## 6. UI/HUD 동기화 (타겟 거리/HP/카메라)
+
+### 6.1 타겟 거리 및 아이콘 표시
+- 타겟과 자신의 거리 계산 후 텍스트 표시  
+  - 관련 코드: `TargetInfoUI.cs` / `TargetInfoUI2.cs`
+
+- `WorldToScreenPoint`로 화면 좌표 투영 → 타겟 아이콘 위치 갱신  
+  - 관련 코드: `TargetInfoUI.cs` / `TargetInfoUI2.cs`
+
+### 6.2 카메라 전환
+- Z / C 키로 카메라 전환 (Zoom/서브 카메라)  
+  - 관련 코드: `PlayerController.cs`, `zCameraUI.cs`
+
+### 6.3 결과 씬 → 로비 복귀
+- ResultScene에서 Disconnect 후 Lobby 로드  
+  - 관련 코드: `Resultscene.cs`
+
+---
+
+## 7. 조작키 정리
+- **조준/기동**: 마우스 Y(피치), 마우스 X(요), A/D(롤: Horizontal)  
+  - 관련 코드: `PlayerController.cs`
+
+- **가속/감속**: W 가속, S 감속  
+  - 관련 코드: `PlayerController.cs`, `speedController.cs`
+
+- **발사**: Fire1(기본 좌클릭) — 기관총 연사 / 미사일 발사  
+  - 관련 코드: `WeaponManager.cs`
+
+- **무기 전환**: 1(기관총) / 2(미사일)  
+  - 관련 코드: `WeaponnManager2.cs`
+
+- **카메라**: Z / C 전환  
+  - 관련 코드: `PlayerController.cs`
+
+- **종료**: ESC  
+  - 관련 코드: `PlayerController.cs`
+
 </details>
 
 ---
