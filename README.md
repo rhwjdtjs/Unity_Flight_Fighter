@@ -34,21 +34,21 @@
 ---
 
 ## Key Features
-#**1 vs 1 룸 기반 멀티플레이**
-- Dropdown으로 최대 인원 / 제한 시간(maxTime) 을 정하고 JoinRandomOrCreateRoom 수행
-- 룸 인원이 꽉 차면 마스터가 게임 시작 씬을 로드
-#**전투 시스템 (기관총 / 미사일)**
-- 기관총: Fire1 유지 시 RPC로 발사, Bullet을 네트워크 Instantiate
-- 미사일: Fire1 클릭 시 락온 상태에서만 RPC 발사
-#**락온(시야각/거리 기반)**
-- OverlapSphere + 시야각(viewAngle) + Raycast로 “정면 시야에 들어온 적”만 락온 판정
-#**HP/결과 처리**
-- 피격 시 HP 감소 후 RPC로 상대 UI에 표시될 targetHP 갱신
-- HP 0이면 2초 후 ResultScene 이동
-#**HUD/타겟 정보 UI**
-- 타겟 거리, 화면 투영(WorldToScreenPoint) 기반 타겟 아이콘/락온 아이콘 표시
-- Player2용 UI 스크립트를 따로 둬서 1:1 대칭 구조 유지 
-
+**1 vs 1 룸 기반 멀티플레이**  
+- Dropdown으로 최대 인원 / 제한 시간(maxTime) 을 정하고 JoinRandomOrCreateRoom 수행  
+- 룸 인원이 꽉 차면 마스터가 게임 시작 씬을 로드  
+**전투 시스템 (기관총 / 미사일)**  
+- 기관총: Fire1 유지 시 RPC로 발사, Bullet을 네트워크 Instantiate  
+- 미사일: Fire1 클릭 시 락온 상태에서만 RPC 발사  
+**락온(시야각/거리 기반)**    
+- OverlapSphere + 시야각(viewAngle) + Raycast로 “정면 시야에 들어온 적”만 락온 판정  
+**HP/결과 처리**    
+- 피격 시 HP 감소 후 RPC로 상대 UI에 표시될 targetHP 갱신  
+- HP 0이면 2초 후 ResultScene 이동  
+**HUD/타겟 정보 UI**  
+- 타겟 거리, 화면 투영(WorldToScreenPoint) 기반 타겟 아이콘/락온 아이콘 표시  
+- Player2용 UI 스크립트를 따로 둬서 1:1 대칭 구조 유지   
+  
 ---
 
 ## Tech Stack  
