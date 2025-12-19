@@ -6,8 +6,7 @@
 
 **Quick Links**
 - 🎮 플레이 시연 영상(Photon PUN): https://youtu.be/Ya8GWlwHJAQ?si=jv_7c-uHWJrbD0rv  
-- 📘 Technical Doc(아래 접기 섹션): README 하단
-
+- 📘 [Technical Doc](#0-TOC)  
 ---
 ## Introduction
 - Flight Fighter는 전투기를 조종해 1:1로 교전하는 아케이드 공중전 멀티플레이 게임입니다.
@@ -77,6 +76,7 @@
 <details>
   <summary><b>📘 Technical Documentation (Flight Fighter 기술서) (펼치기)</b></summary>
 
+<a id="0-TOC"></a>
 ## TOC
   
 - [네트워크 구조 개요 (Photon Room 기반)](#1-네트워크-구조-개요-photon-room-기반)
